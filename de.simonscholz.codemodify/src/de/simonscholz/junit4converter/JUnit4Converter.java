@@ -56,7 +56,7 @@ public class JUnit4Converter implements ICompilationUnitModifier {
 		ASTRewrite rewriter = ASTRewrite.create(ast);
 		ImportRewrite importRewrite = ImportRewrite.create(astRoot, true);
 		modifiedDocument = false;
-		JUnit4CustomConverter bisonConverter = new JUnit4CustomConverter(ast,
+		JUnit4CustomConverter customConverter = new JUnit4CustomConverter(ast,
 				rewriter, importRewrite);
 
 		List types = astRoot.types();
@@ -65,8 +65,8 @@ public class JUnit4Converter implements ICompilationUnitModifier {
 			if (object instanceof TypeDeclaration) {
 
 				TypeDeclaration typeDeclaration = (TypeDeclaration) object;
-				bisonConverter.convert(typeDeclaration);
-				modifiedDocument = bisonConverter.wasConverted();
+				customConverter.convert(typeDeclaration);
+				modifiedDocument = customConverter.wasConverted();
 
 				removeTestCaseSuperclass(rewriter, importRewrite,
 						typeDeclaration);
