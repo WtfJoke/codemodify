@@ -2,6 +2,7 @@ package de.simonscholz.junit4converter.converters;
 
 import static de.simonscholz.junit4converter.converters.JTestCaseConverter.DBRULE_VARIABLENAME;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import org.eclipse.jdt.core.dom.ASTNode;
@@ -12,27 +13,44 @@ import org.eclipse.jdt.core.dom.rewrite.ASTRewrite;
 
 public class RedirectCallsOfSuperClassToRuleMethodBodyVisitor extends
 		ASTVisitor {
-	private static final String GETSESSIONMETHODCALL = "getSession()";
 	private ASTRewrite rewriter;
+	private List<String> toBeReplacedMethodCalls;
 
 	public RedirectCallsOfSuperClassToRuleMethodBodyVisitor(ASTRewrite rewriter) {
 		this.rewriter = rewriter;
+		createListOfToBeReplacedMethods();
+	}
+
+	private void createListOfToBeReplacedMethods() {
+		toBeReplacedMethodCalls = new ArrayList<>();
+		toBeReplacedMethodCalls.add("getSession");
+		toBeReplacedMethodCalls.add("addImplementation");
 	}
 
 	@Override
 	public boolean visit(Block methodBody) {
-		for (Statement statement : getStatements(methodBody)) {
-			String statementAsString = statement.toString();
-			if (statementAsString.contains(GETSESSIONMETHODCALL)) {
-				String newStatement = statementAsString.replace(
-						GETSESSIONMETHODCALL, DBRULE_VARIABLENAME + '.'
-								+ GETSESSIONMETHODCALL);
-				ASTNode delegateToRule = rewriter.createStringPlaceholder(
-						newStatement, ASTNode.EMPTY_STATEMENT);
-				rewriter.replace(statement, delegateToRule, null);
+		for (Statement currentStatement : getStatements(methodBody)) {
+			String statement = currentStatement.toString();
+			for (String toBeReplacedMethodCall : toBeReplacedMethodCalls) {
+				if (statement.contains(toBeReplacedMethodCall)) {
+					String newStatement = createReplacingStatement(statement,
+							toBeReplacedMethodCall);
+					ASTNode delegateToRule = rewriter.createStringPlaceholder(
+							newStatement, ASTNode.EMPTY_STATEMENT);
+					rewriter.replace(currentStatement, delegateToRule, null);
+				}
 			}
 		}
 		return true;
+	}
+
+	private String createReplacingStatement(String currentStatement,
+			String toReplacingMethodCall) {
+		String newMethodCall = DBRULE_VARIABLENAME + '.'
+				+ toReplacingMethodCall;
+		String newStatement = currentStatement.replace(toReplacingMethodCall,
+				newMethodCall);
+		return newStatement;
 	}
 
 	@SuppressWarnings("unchecked")
