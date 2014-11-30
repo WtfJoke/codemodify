@@ -23,8 +23,11 @@ public class RedirectCallsOfSuperClassToRuleMethodBodyVisitor extends
 
 	private void createListOfToBeReplacedMethods() {
 		toBeReplacedMethodCalls = new ArrayList<>();
-		toBeReplacedMethodCalls.add("getSession");
-		toBeReplacedMethodCalls.add("addImplementation");
+		toBeReplacedMethodCalls.add("getSession()");
+		toBeReplacedMethodCalls.add("addImplementation(");
+		toBeReplacedMethodCalls.add("createMockView(");
+		toBeReplacedMethodCalls.add("addImplementation(");
+		toBeReplacedMethodCalls.add("addDatatypeProvider(");
 	}
 
 	@Override
