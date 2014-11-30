@@ -1,6 +1,5 @@
-package de.simonscholz.junit4converter;
+package de.simonscholz.junit4converter.converters;
 
-import org.eclipse.jdt.core.dom.AST;
 import org.eclipse.jdt.core.dom.ASTNode;
 import org.eclipse.jdt.core.dom.SimpleType;
 import org.eclipse.jdt.core.dom.Type;
@@ -9,12 +8,7 @@ import org.eclipse.jdt.core.dom.rewrite.ASTRewrite;
 import org.eclipse.jdt.core.dom.rewrite.ImportRewrite;
 import org.eclipse.jdt.core.dom.rewrite.ListRewrite;
 
-public class JUnit4CustomConverter {
-
-	private static final String NODB_TESTRULES_PROVIDER = "NoDBTestRulesProvider";
-	private static final String NODB_TESTRULES_PROVIDER_QUALIFIEDNAME = "com.foo.res.NoDBTestRulesProvider";
-	private static final String NODB_TESTCASE_CLASSNAME = "NoDBTestCase";
-	private static final String NODB_TESTCASE_QUALIFIEDNAME = "com.foo.res.NoDBTestCase";
+public class JTestCaseConverter implements Converter {
 	private static final String JTESTCASE_CLASSNAME = "JTestCase";
 	private static final String JTESTCASE_QUALIFIEDNAME = "com.foo.res.JTestCase";
 	private static final String DBRULE_QUALIFIEDNAME = "com.foo.res.BisonDBRule";
@@ -22,33 +16,18 @@ public class JUnit4CustomConverter {
 	private static final String DBRULE_VARIABLENAME = "_functions";
 	private static final String RULE_QUALIFIEDNAME = "org.junit.Rule";
 
-	private final ImportRewrite importRewriter;
 	private final ASTRewrite rewriter;
-	private final AST ast;
-	private boolean _wasModified;
+	private final ImportRewrite importRewriter;
+	private boolean wasModified;
 
-	JUnit4CustomConverter(AST ast, ASTRewrite rewriter,
-			ImportRewrite importRewriter) {
-		this.ast = ast;
+	JTestCaseConverter(ASTRewrite rewriter, ImportRewrite importRewriter) {
 		this.rewriter = rewriter;
 		this.importRewriter = importRewriter;
 	}
 
-	void convert(TypeDeclaration typeDeclaration) {
-		convertNoDBTestCase(typeDeclaration.getSuperclassType());
-		convertJTestCase(typeDeclaration);
-	}
-
-	boolean wasConverted() {
-		return _wasModified;
-	}
-
-	private void convertJTestCase(TypeDeclaration typeDeclaration) {
-		Type superclassType = typeDeclaration.getSuperclassType();
-		if (isJTestCase(superclassType)) {
-			removeJTestSuperClass(superclassType);
-			addDBRule(typeDeclaration);
-		}
+	@Override
+	public boolean isConveratable(TypeDeclaration typeDeclaration) {
+		return isJTestCase(typeDeclaration.getSuperclassType());
 	}
 
 	private boolean isJTestCase(Type superclassType) {
@@ -58,6 +37,19 @@ public class JUnit4CustomConverter {
 					.getFullyQualifiedName());
 		}
 		return false;
+	}
+
+	@Override
+	public void convert(TypeDeclaration typeDeclaration) {
+		wasModified = true;
+		Type superclassType = typeDeclaration.getSuperclassType();
+		removeJTestSuperClass(superclassType);
+		addDBRule(typeDeclaration);
+	}
+
+	@Override
+	public boolean wasConverted() {
+		return wasModified;
 	}
 
 	private void addDBRule(TypeDeclaration typeDeclaration) {
@@ -79,24 +71,5 @@ public class JUnit4CustomConverter {
 	private void removeJTestSuperClass(Type superType) {
 		rewriter.remove(superType, null);
 		importRewriter.removeImport(JTESTCASE_QUALIFIEDNAME);
-		_wasModified = true;
-	}
-
-	private void convertNoDBTestCase(Type superclassType) {
-		if (superclassType != null && superclassType.isSimpleType()) {
-			SimpleType superType = (SimpleType) superclassType;
-			if (NODB_TESTCASE_CLASSNAME.equals(superType.getName()
-					.getFullyQualifiedName())) {
-				SimpleType newNoDBTestRulesProviderSuperType = ast
-						.newSimpleType(ast
-								.newSimpleName(NODB_TESTRULES_PROVIDER));
-				rewriter.replace(superType, newNoDBTestRulesProviderSuperType,
-						null);
-				importRewriter.removeImport(NODB_TESTCASE_QUALIFIEDNAME);
-				importRewriter.addImport(NODB_TESTRULES_PROVIDER_QUALIFIEDNAME);
-				_wasModified = true;
-			}
-		}
-
 	}
 }

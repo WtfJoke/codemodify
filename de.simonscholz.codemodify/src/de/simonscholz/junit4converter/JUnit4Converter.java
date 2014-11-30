@@ -27,6 +27,7 @@ import org.eclipse.jface.text.Document;
 import org.eclipse.text.edits.TextEdit;
 
 import de.simonscholz.ICompilationUnitModifier;
+import de.simonscholz.junit4converter.converters.ConverterFactory;
 
 public class JUnit4Converter implements ICompilationUnitModifier {
 
@@ -56,17 +57,14 @@ public class JUnit4Converter implements ICompilationUnitModifier {
 		ASTRewrite rewriter = ASTRewrite.create(ast);
 		ImportRewrite importRewrite = ImportRewrite.create(astRoot, true);
 		modifiedDocument = false;
-		JUnit4CustomConverter customConverter = new JUnit4CustomConverter(ast,
-				rewriter, importRewrite);
 
 		List types = astRoot.types();
 
 		for (Object object : types) {
 			if (object instanceof TypeDeclaration) {
-
 				TypeDeclaration typeDeclaration = (TypeDeclaration) object;
-				customConverter.convert(typeDeclaration);
-				modifiedDocument = customConverter.wasConverted();
+				modifiedDocument = ConverterFactory.convert(ast, rewriter,
+						importRewrite, typeDeclaration);
 
 				removeTestCaseSuperclass(rewriter, importRewrite,
 						typeDeclaration);
