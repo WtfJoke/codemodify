@@ -9,27 +9,29 @@ import org.eclipse.jdt.core.dom.rewrite.ASTRewrite;
 import org.eclipse.jdt.core.dom.rewrite.ImportRewrite;
 
 public class ConverterFactory {
-	private ConverterFactory() {
-	}
+	private List<Converter> converters;
 
-	public static boolean convert(AST ast, ASTRewrite rewriter,
-			ImportRewrite importRewriter, TypeDeclaration typeDeclaration) {
-		boolean wasConverted = false;
-		for (Converter converter : getConverters(ast, rewriter, importRewriter)) {
-			if (converter.isConveratable(typeDeclaration)) {
-				wasConverted = true;
-				converter.convert(typeDeclaration);
-			}
-		}
-		return wasConverted;
-	}
-
-	private static List<Converter> getConverters(AST ast, ASTRewrite rewriter,
+	private ConverterFactory(AST ast, ASTRewrite rewriter,
 			ImportRewrite importRewriter) {
-		List<Converter> converters = new ArrayList<>(2);
+		converters = new ArrayList<>(2);
 		converters.add(new JTestCaseConverter(rewriter, importRewriter));
 		converters
 				.add(new NoDBTestCaseConverter(ast, rewriter, importRewriter));
-		return converters;
+	}
+
+	public static ConverterFactory create(AST ast, ASTRewrite rewriter,
+			ImportRewrite importRewriter) {
+		return new ConverterFactory(ast, rewriter, importRewriter);
+	}
+
+	public boolean convert(TypeDeclaration typeDeclaration) {
+		boolean wasConverted = false;
+		for (Converter converter : converters) {
+			if (converter.isConveratable(typeDeclaration)) {
+				converter.convert(typeDeclaration);
+				wasConverted = true;
+			}
+		}
+		return wasConverted;
 	}
 }

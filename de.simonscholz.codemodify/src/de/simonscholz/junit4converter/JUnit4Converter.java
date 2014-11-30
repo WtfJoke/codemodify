@@ -59,12 +59,13 @@ public class JUnit4Converter implements ICompilationUnitModifier {
 		modifiedDocument = false;
 
 		List types = astRoot.types();
+		ConverterFactory converterFactory = ConverterFactory.create(ast,
+				rewriter, importRewrite);
 
 		for (Object object : types) {
 			if (object instanceof TypeDeclaration) {
 				TypeDeclaration typeDeclaration = (TypeDeclaration) object;
-				modifiedDocument = ConverterFactory.convert(ast, rewriter,
-						importRewrite, typeDeclaration);
+				modifiedDocument = converterFactory.convert(typeDeclaration);
 
 				removeTestCaseSuperclass(rewriter, importRewrite,
 						typeDeclaration);
