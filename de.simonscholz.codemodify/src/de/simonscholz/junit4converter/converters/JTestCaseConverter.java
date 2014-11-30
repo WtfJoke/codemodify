@@ -1,11 +1,8 @@
 package de.simonscholz.junit4converter.converters;
 
-import java.util.List;
-
 import org.eclipse.jdt.core.dom.ASTNode;
 import org.eclipse.jdt.core.dom.MethodDeclaration;
 import org.eclipse.jdt.core.dom.SimpleType;
-import org.eclipse.jdt.core.dom.Statement;
 import org.eclipse.jdt.core.dom.Type;
 import org.eclipse.jdt.core.dom.TypeDeclaration;
 import org.eclipse.jdt.core.dom.rewrite.ASTRewrite;
@@ -17,9 +14,8 @@ public class JTestCaseConverter implements Converter {
 	private static final String JTESTCASE_QUALIFIEDNAME = "com.foo.res.JTestCase";
 	private static final String DBRULE_QUALIFIEDNAME = "com.foo.res.BisonDBRule";
 	private static final String DBRULE_CLASSNAME = "BisonDBRule";
-	private static final String DBRULE_VARIABLENAME = "_functions";
+	static final String DBRULE_VARIABLENAME = "_functions";
 	private static final String RULE_QUALIFIEDNAME = "org.junit.Rule";
-	private static final String GETSESSIONMETHODCALL = "getSession()";
 
 	private final ASTRewrite rewriter;
 	private final ImportRewrite importRewriter;
@@ -81,20 +77,9 @@ public class JTestCaseConverter implements Converter {
 
 	private void replaceCallsOfSuperClass(TypeDeclaration typeDeclaration) {
 		MethodDeclaration[] methods = typeDeclaration.getMethods();
-		for (MethodDeclaration methodDeclaration : methods) {
-			List<Statement> statements = methodDeclaration.getBody()
-					.statements();
-			for (Statement statement : statements) {
-				String statementAsString = statement.toString();
-				if (statementAsString.contains(GETSESSIONMETHODCALL)) {
-					String newStatement = statementAsString.replace(
-							GETSESSIONMETHODCALL, DBRULE_VARIABLENAME + '.'
-									+ GETSESSIONMETHODCALL);
-					ASTNode delegateToRule = rewriter.createStringPlaceholder(
-							newStatement, ASTNode.EMPTY_STATEMENT);
-					rewriter.replace(statement, delegateToRule, null);
-				}
-			}
+		for (MethodDeclaration method : methods) {
+			method.accept(new RedirectCallsOfSuperClassToRuleMethodBodyVisitor(
+					rewriter));
 		}
 	}
 }
