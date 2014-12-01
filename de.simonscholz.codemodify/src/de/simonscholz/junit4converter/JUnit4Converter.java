@@ -17,6 +17,7 @@ import org.eclipse.jdt.core.dom.Modifier.ModifierKeyword;
 import org.eclipse.jdt.core.dom.Name;
 import org.eclipse.jdt.core.dom.SimpleName;
 import org.eclipse.jdt.core.dom.SimpleType;
+import org.eclipse.jdt.core.dom.Statement;
 import org.eclipse.jdt.core.dom.Type;
 import org.eclipse.jdt.core.dom.TypeDeclaration;
 import org.eclipse.jdt.core.dom.rewrite.ASTRewrite;
@@ -124,6 +125,7 @@ public class JUnit4Converter implements ICompilationUnitModifier {
 				createMarkerAnnotation(ast, rewriter, methodDeclaration,
 						BEFORE_ANNOTATION_NAME);
 				convertProtectedToPublic(ast, rewriter, methodDeclaration);
+				removeSuperCall(rewriter, methodDeclaration);
 				importRewrite.addImport(BEFORE_ANNOTATION_QUALIFIED_NAME);
 				modifiedDocument = true;
 			} else if (TEAR_DOWN_METHOD_NAME.equals(fullyQualifiedName)) {
@@ -132,8 +134,23 @@ public class JUnit4Converter implements ICompilationUnitModifier {
 				createMarkerAnnotation(ast, rewriter, methodDeclaration,
 						AFTER_ANNOTATION_NAME);
 				convertProtectedToPublic(ast, rewriter, methodDeclaration);
+				removeSuperCall(rewriter, methodDeclaration);
 				importRewrite.addImport(AFTER_ANNOTATION_QUALIFIED_NAME);
 				modifiedDocument = true;
+			}
+		}
+	}
+
+	protected void removeSuperCall(ASTRewrite rewriter,
+			MethodDeclaration methodDeclaration) {
+		List statements = methodDeclaration.getBody().statements();
+		if (statements.size() >= 1) {
+			Object object = statements.get(0);
+			if (object instanceof Statement) {
+				Statement superCall = (Statement) object;
+				if (superCall.toString().startsWith("super")) {
+					rewriter.remove(superCall, null);
+				}
 			}
 		}
 	}
