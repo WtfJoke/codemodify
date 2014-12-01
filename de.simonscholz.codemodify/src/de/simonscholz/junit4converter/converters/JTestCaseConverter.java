@@ -11,9 +11,9 @@ import org.eclipse.jdt.core.dom.rewrite.ListRewrite;
 
 public class JTestCaseConverter implements Converter {
 	private static final String JTESTCASE_CLASSNAME = "JTestCase";
-	private static final String JTESTCASE_QUALIFIEDNAME = "com.foo.res.JTestCase";
-	private static final String DBRULE_QUALIFIEDNAME = "com.foo.res.BisonDBRule";
-	private static final String DBRULE_CLASSNAME = "BisonDBRule";
+	private static final String JTESTCASE_QUALIFIEDNAME = "CH.obj.Libraries.UnitTesting.JTestCase";
+	private static final String DBRULE_QUALIFIEDNAME = "CH.obj.Libraries.UnitTesting.BisonDbFunctions";
+	private static final String DBRULE_CLASSNAME = "BisonDbFunctions";
 	static final String DBRULE_VARIABLENAME = "_functions";
 	private static final String RULE_QUALIFIEDNAME = "org.junit.Rule";
 
@@ -80,6 +80,8 @@ public class JTestCaseConverter implements Converter {
 		for (MethodDeclaration method : methods) {
 			method.accept(new RedirectCallsOfSuperClassToRuleMethodBodyVisitor(
 					rewriter));
+			method.accept(new ImportEasyMockIfNecessaryMethodBodyVisitor(
+					importRewriter));
 		}
 	}
 }

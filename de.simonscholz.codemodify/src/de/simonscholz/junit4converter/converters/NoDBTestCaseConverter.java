@@ -10,9 +10,9 @@ import org.eclipse.jdt.core.dom.rewrite.ImportRewrite;
 public class NoDBTestCaseConverter implements Converter {
 
 	private static final String NODB_TESTRULES_PROVIDER = "NoDBTestRulesProvider";
-	private static final String NODB_TESTRULES_PROVIDER_QUALIFIEDNAME = "com.foo.res.NoDBTestRulesProvider";
+	private static final String NODB_TESTRULES_PROVIDER_QUALIFIEDNAME = "CH.obj.Application.NoDBTestRulesProvider";
 	private static final String NODB_TESTCASE_CLASSNAME = "NoDBTestCase";
-	private static final String NODB_TESTCASE_QUALIFIEDNAME = "com.foo.res.NoDBTestCase";
+	private static final String NODB_TESTCASE_QUALIFIEDNAME = "CH.obj.Application.NoDBTestCase";
 	private final AST ast;
 	private final ASTRewrite rewriter;
 	private final ImportRewrite importRewriter;
