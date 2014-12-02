@@ -26,7 +26,6 @@ public class RedirectCallsOfSuperClassToRuleMethodBodyVisitor extends
 		toBeReplacedMethodCalls.add("getSession()");
 		toBeReplacedMethodCalls.add("addImplementation(");
 		toBeReplacedMethodCalls.add("createMockView(");
-		toBeReplacedMethodCalls.add("addImplementation(");
 		toBeReplacedMethodCalls.add("addDatatypeProvider(");
 	}
 
@@ -35,8 +34,9 @@ public class RedirectCallsOfSuperClassToRuleMethodBodyVisitor extends
 		for (Statement currentStatement : getStatements(methodBody)) {
 			String statement = currentStatement.toString();
 			for (String toBeReplacedMethodCall : toBeReplacedMethodCalls) {
-				boolean shouldReplace = statement.contains(toBeReplacedMethodCall)
-						&& !shouldNotBeReplaced(statement,
+				boolean shouldReplace = statement
+						.contains(toBeReplacedMethodCall)
+						&& !isCalledOnAnotherObject(statement,
 								toBeReplacedMethodCall);
 				if (shouldReplace) {
 					String newStatement = createReplacingStatement(statement,
@@ -50,7 +50,7 @@ public class RedirectCallsOfSuperClassToRuleMethodBodyVisitor extends
 		return true;
 	}
 
-	private boolean shouldNotBeReplaced(String statement,
+	private boolean isCalledOnAnotherObject(String statement,
 			String toBeReplacedMethodCall) {
 		int startOfReplacement = statement.indexOf(toBeReplacedMethodCall);
 		int previousIndex = startOfReplacement - 1;
