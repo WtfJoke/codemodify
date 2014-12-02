@@ -35,10 +35,10 @@ public class RedirectCallsOfSuperClassToRuleMethodBodyVisitor extends
 		for (Statement currentStatement : getStatements(methodBody)) {
 			String statement = currentStatement.toString();
 			for (String toBeReplacedMethodCall : toBeReplacedMethodCalls) {
-				if (statement.contains(toBeReplacedMethodCall)) {
-					if (shouldNotBeReplaced(statement, toBeReplacedMethodCall)) {
-						continue;
-					}
+				boolean shouldReplace = statement.contains(toBeReplacedMethodCall)
+						&& !shouldNotBeReplaced(statement,
+								toBeReplacedMethodCall);
+				if (shouldReplace) {
 					String newStatement = createReplacingStatement(statement,
 							toBeReplacedMethodCall);
 					ASTNode delegateToRule = rewriter.createStringPlaceholder(
