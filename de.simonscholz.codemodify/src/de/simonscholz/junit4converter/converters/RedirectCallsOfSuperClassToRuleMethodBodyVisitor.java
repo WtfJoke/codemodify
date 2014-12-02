@@ -36,6 +36,15 @@ public class RedirectCallsOfSuperClassToRuleMethodBodyVisitor extends
 			String statement = currentStatement.toString();
 			for (String toBeReplacedMethodCall : toBeReplacedMethodCalls) {
 				if (statement.contains(toBeReplacedMethodCall)) {
+					int startOfReplacement = statement
+							.indexOf(toBeReplacedMethodCall);
+					int previousIndex = startOfReplacement - 1;
+					if (previousIndex >= 0) {
+						char previousChar = statement.charAt(previousIndex);
+						if (previousChar == '.') {
+							continue;
+						}
+					}
 					String newStatement = createReplacingStatement(statement,
 							toBeReplacedMethodCall);
 					ASTNode delegateToRule = rewriter.createStringPlaceholder(
