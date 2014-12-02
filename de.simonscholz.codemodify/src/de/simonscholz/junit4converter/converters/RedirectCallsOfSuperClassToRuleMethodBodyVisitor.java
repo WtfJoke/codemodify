@@ -36,14 +36,8 @@ public class RedirectCallsOfSuperClassToRuleMethodBodyVisitor extends
 			String statement = currentStatement.toString();
 			for (String toBeReplacedMethodCall : toBeReplacedMethodCalls) {
 				if (statement.contains(toBeReplacedMethodCall)) {
-					int startOfReplacement = statement
-							.indexOf(toBeReplacedMethodCall);
-					int previousIndex = startOfReplacement - 1;
-					if (previousIndex >= 0) {
-						char previousChar = statement.charAt(previousIndex);
-						if (previousChar == '.') {
-							continue;
-						}
+					if (shouldNotBeReplaced(statement, toBeReplacedMethodCall)) {
+						continue;
 					}
 					String newStatement = createReplacingStatement(statement,
 							toBeReplacedMethodCall);
@@ -54,6 +48,17 @@ public class RedirectCallsOfSuperClassToRuleMethodBodyVisitor extends
 			}
 		}
 		return true;
+	}
+
+	private boolean shouldNotBeReplaced(String statement,
+			String toBeReplacedMethodCall) {
+		int startOfReplacement = statement.indexOf(toBeReplacedMethodCall);
+		int previousIndex = startOfReplacement - 1;
+		if (previousIndex >= 0) {
+			char previousChar = statement.charAt(previousIndex);
+			return previousChar == '.';
+		}
+		return false;
 	}
 
 	private String createReplacingStatement(String currentStatement,
