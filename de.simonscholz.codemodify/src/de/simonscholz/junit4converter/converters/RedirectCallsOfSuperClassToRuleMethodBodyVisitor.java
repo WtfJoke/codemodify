@@ -2,10 +2,8 @@ package de.simonscholz.junit4converter.converters;
 
 import static de.simonscholz.junit4converter.converters.JTestCaseConverter.DBRULE_VARIABLENAME;
 
-import java.util.HashMap;
+import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
-import java.util.Map.Entry;
 
 import org.eclipse.jdt.core.dom.ASTNode;
 import org.eclipse.jdt.core.dom.ASTVisitor;
@@ -16,7 +14,7 @@ import org.eclipse.jdt.core.dom.rewrite.ASTRewrite;
 public class RedirectCallsOfSuperClassToRuleMethodBodyVisitor extends
 		ASTVisitor {
 	private ASTRewrite rewriter;
-	private Map<String, Boolean> toBeReplacedMethodCalls;
+	private List<String> toBeReplacedMethodCalls;
 
 	public RedirectCallsOfSuperClassToRuleMethodBodyVisitor(ASTRewrite rewriter) {
 		this.rewriter = rewriter;
@@ -24,32 +22,20 @@ public class RedirectCallsOfSuperClassToRuleMethodBodyVisitor extends
 	}
 
 	private void createListOfToBeReplacedMethods() {
-		toBeReplacedMethodCalls = new HashMap<>();
-		toBeReplacedMethodCalls.put("getSession()", Boolean.FALSE);
-		toBeReplacedMethodCalls.put("addImplementation(", Boolean.TRUE);
-		toBeReplacedMethodCalls.put("createMockView(", Boolean.TRUE);
-		toBeReplacedMethodCalls.put("addDatatypeProvider(", Boolean.TRUE);
+		toBeReplacedMethodCalls = new ArrayList<>();
+		toBeReplacedMethodCalls.add("getSession()");
+		toBeReplacedMethodCalls.add("addImplementation(");
+		toBeReplacedMethodCalls.add("createMockView(");
+		toBeReplacedMethodCalls.add("addImplementation(");
+		toBeReplacedMethodCalls.add("addDatatypeProvider(");
 	}
 
 	@Override
 	public boolean visit(Block methodBody) {
 		for (Statement currentStatement : getStatements(methodBody)) {
 			String statement = currentStatement.toString();
-			for (Entry<String, Boolean> entry : toBeReplacedMethodCalls
-					.entrySet()) {
-				Boolean replaceOnlyStartsWith = entry.getValue();
-				String toBeReplacedMethodCall = entry.getKey();
-
-				boolean shouldReplace = false;
-				if (replaceOnlyStartsWith) {
-					if (statement.startsWith(toBeReplacedMethodCall)) {
-						shouldReplace = true;
-					}
-				} else if (statement.contains(toBeReplacedMethodCall)) {
-					shouldReplace = true;
-				}
-
-				if (shouldReplace) {
+			for (String toBeReplacedMethodCall : toBeReplacedMethodCalls) {
+				if (statement.contains(toBeReplacedMethodCall)) {
 					String newStatement = createReplacingStatement(statement,
 							toBeReplacedMethodCall);
 					ASTNode delegateToRule = rewriter.createStringPlaceholder(
