@@ -13,9 +13,9 @@ import de.simonscholz.junit4converter.JUnit4Converter;
 public class StandardModuleTestCaseConverter extends JUnit4Converter implements
 		Converter {
 	private static final String MODULETESTCASE_CLASSNAME = "StandardModuleTestCase";
-	private static final String MODULETESTCASE_QUALIFIEDNAME = "CH.obj.Application.StandardModuleTestCase";
+	private static final String MODULETESTCASE_QUALIFIEDNAME = "CH.obj.Application.Global.Servicelib.StandardModulTestCase";
 	private static final String MODULETEST_CLASSNAME = "StandardModuleTest";
-	private static final String MODULETEST_QUALIFIEDNAME = "CH.obj.Application.StandardModuleTest";
+	private static final String MODULETEST_QUALIFIEDNAME = "CH.obj.Application.Global.Servicelib.StandardModulTest";
 	private static final String BEFORE_METHOD = "checkPreconditions";
 
 	private final AST ast;
