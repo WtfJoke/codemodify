@@ -27,7 +27,7 @@ public class ConverterFactory {
 	public boolean convert(TypeDeclaration typeDeclaration) {
 		boolean wasConverted = false;
 		for (Converter converter : converters) {
-			if (converter.isConveratable(typeDeclaration)) {
+			if (converter.isConvertable(typeDeclaration)) {
 				converter.convert(typeDeclaration);
 				wasConverted = true;
 			}

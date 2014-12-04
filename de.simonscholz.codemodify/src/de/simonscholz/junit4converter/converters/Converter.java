@@ -4,7 +4,7 @@ import org.eclipse.jdt.core.dom.TypeDeclaration;
 
 interface Converter {
 
-	boolean isConveratable(TypeDeclaration typeDeclaration);
+	boolean isConvertable(TypeDeclaration typeDeclaration);
 
 	void convert(TypeDeclaration typeDeclaration);
 

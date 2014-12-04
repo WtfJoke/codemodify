@@ -31,7 +31,7 @@ public class StandardModuleTestCaseConverter extends JUnit4Converter implements
 	}
 
 	@Override
-	public boolean isConveratable(TypeDeclaration typeDeclaration) {
+	public boolean isConvertable(TypeDeclaration typeDeclaration) {
 		Type superclassType = typeDeclaration.getSuperclassType();
 		if (superclassType != null && superclassType.isSimpleType()) {
 			SimpleType superType = (SimpleType) superclassType;

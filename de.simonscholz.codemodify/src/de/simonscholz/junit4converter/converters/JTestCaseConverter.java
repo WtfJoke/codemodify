@@ -27,7 +27,7 @@ public class JTestCaseConverter implements Converter {
 	}
 
 	@Override
-	public boolean isConveratable(TypeDeclaration typeDeclaration) {
+	public boolean isConvertable(TypeDeclaration typeDeclaration) {
 		return isJTestCase(typeDeclaration.getSuperclassType());
 	}
 
