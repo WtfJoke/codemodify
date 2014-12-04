@@ -17,6 +17,8 @@ public class ConverterFactory {
 		converters.add(new JTestCaseConverter(rewriter, importRewriter));
 		converters
 				.add(new NoDBTestCaseConverter(ast, rewriter, importRewriter));
+		converters.add(new StandardModuleTestCaseConverter(ast, rewriter,
+				importRewriter));
 	}
 
 	public static ConverterFactory create(AST ast, ASTRewrite rewriter,
