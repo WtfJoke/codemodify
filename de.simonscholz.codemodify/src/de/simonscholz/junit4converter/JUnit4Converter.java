@@ -32,11 +32,11 @@ import de.simonscholz.junit4converter.converters.ConverterFactory;
 
 public class JUnit4Converter implements ICompilationUnitModifier {
 
-	private static final String OVERRIDE_ANNOTATION_NAME = "Override";
+	protected static final String OVERRIDE_ANNOTATION_NAME = "Override";
 	private static final String TEST_ANNOTATION_QUALIFIED_NAME = "org.junit.Test";
 	private static final String TEST_ANNOTATION_NAME = "Test";
-	private static final String BEFORE_ANNOTATION_QUALIFIED_NAME = "org.junit.Before";
-	private static final String BEFORE_ANNOTATION_NAME = "Before";
+	protected static final String BEFORE_ANNOTATION_QUALIFIED_NAME = "org.junit.Before";
+	protected static final String BEFORE_ANNOTATION_NAME = "Before";
 	private static final String AFTER_ANNOTATION_QUALIFIED_NAME = "org.junit.After";
 	private static final String AFTER_ANNOTATION_NAME = "After";
 
@@ -141,7 +141,7 @@ public class JUnit4Converter implements ICompilationUnitModifier {
 			}
 		}
 	}
-	
+
 	protected boolean isPublicMethod(MethodDeclaration methodDeclaration) {
 		List modifiers = methodDeclaration.modifiers();
 		for (Object object : modifiers) {
@@ -153,7 +153,6 @@ public class JUnit4Converter implements ICompilationUnitModifier {
 		}
 		return false;
 	}
-
 
 	protected void removeSuperCall(ASTRewrite rewriter,
 			MethodDeclaration methodDeclaration) {
