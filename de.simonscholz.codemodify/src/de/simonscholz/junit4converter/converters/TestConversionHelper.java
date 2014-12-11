@@ -9,7 +9,7 @@ import org.eclipse.jdt.core.dom.rewrite.ASTRewrite;
 import org.eclipse.jdt.core.dom.rewrite.ImportRewrite;
 import org.eclipse.jdt.core.dom.rewrite.ListRewrite;
 
-final class DBTestConversionHelper {
+final class TestConversionHelper {
 
 	private static final String DBRULE_QUALIFIEDNAME = "CH.obj.Libraries.UnitTesting.BisonDbFunctions";
 	private static final String DBRULE_CLASSNAME = "BisonDbFunctions";
@@ -18,7 +18,7 @@ final class DBTestConversionHelper {
 	private final ASTRewrite rewriter;
 	private final ImportRewrite importRewriter;
 
-	DBTestConversionHelper(ASTRewrite rewriter, ImportRewrite importRewriter) {
+	TestConversionHelper(ASTRewrite rewriter, ImportRewrite importRewriter) {
 		this.rewriter = rewriter;
 		this.importRewriter = importRewriter;
 	}

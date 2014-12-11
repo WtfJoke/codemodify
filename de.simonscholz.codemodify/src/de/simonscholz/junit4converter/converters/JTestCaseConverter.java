@@ -11,13 +11,13 @@ public class JTestCaseConverter implements Converter {
 
 	private final ASTRewrite rewriter;
 	private final ImportRewrite importRewriter;
-	private final DBTestConversionHelper helper;
+	private final TestConversionHelper helper;
 	private boolean wasModified;
 
 	JTestCaseConverter(ASTRewrite rewriter, ImportRewrite importRewriter) {
 		this.rewriter = rewriter;
 		this.importRewriter = importRewriter;
-		this.helper = new DBTestConversionHelper(rewriter, importRewriter);
+		this.helper = new TestConversionHelper(rewriter, importRewriter);
 	}
 
 	@Override

@@ -16,7 +16,7 @@ public class NoDBTestCaseConverter implements Converter {
 	private final AST ast;
 	private final ASTRewrite rewriter;
 	private final ImportRewrite importRewriter;
-	private final DBTestConversionHelper helper;
+	private final TestConversionHelper helper;
 	private boolean wasModified;
 
 	NoDBTestCaseConverter(AST ast, ASTRewrite rewriter,
@@ -24,7 +24,7 @@ public class NoDBTestCaseConverter implements Converter {
 		this.ast = ast;
 		this.rewriter = rewriter;
 		this.importRewriter = importRewriter;
-		this.helper = new DBTestConversionHelper(rewriter, importRewriter);
+		this.helper = new TestConversionHelper(rewriter, importRewriter);
 	}
 
 	@Override

@@ -12,11 +12,11 @@ import org.eclipse.jdt.core.dom.rewrite.ImportRewrite;
 public class CustomTestCaseConverter implements Converter {
 
 	private static final String CUSTOMTESTCASE_CLASSNAME = "CustomTestCase";
-	private final DBTestConversionHelper helper;
+	private final TestConversionHelper helper;
 	private boolean wasConverted;
 
 	CustomTestCaseConverter(ASTRewrite rewriter, ImportRewrite importRewriter) {
-		this.helper = new DBTestConversionHelper(rewriter, importRewriter);
+		this.helper = new TestConversionHelper(rewriter, importRewriter);
 	}
 
 	@Override
