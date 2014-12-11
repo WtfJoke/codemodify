@@ -27,7 +27,6 @@ public class CustomTestCaseConverter implements Converter {
 	@Override
 	public void convert(TypeDeclaration typeDeclaration) {
 		wasConverted = true;
-		helper.addDBRule(typeDeclaration);
 		helper.replaceCallsOfSuperClass(typeDeclaration);
 	}
 
