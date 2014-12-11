@@ -1,6 +1,6 @@
 package de.simonscholz.junit4converter.converters;
 
-import static de.simonscholz.junit4converter.converters.JTestCaseConverter.DBRULE_VARIABLENAME;
+import static de.simonscholz.junit4converter.converters.DBTestConversionHelper.DBRULE_VARIABLENAME;
 
 import java.util.ArrayList;
 import java.util.List;

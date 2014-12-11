@@ -22,23 +22,19 @@ public class StandardModuleTestCaseConverter extends JUnit4Converter implements
 	private final ASTRewrite rewriter;
 	private final ImportRewrite importRewriter;
 	private boolean wasModified;
+	private DBTestConversionHelper helper;
 
 	StandardModuleTestCaseConverter(AST ast, ASTRewrite rewriter,
 			ImportRewrite importRewriter) {
 		this.ast = ast;
 		this.rewriter = rewriter;
 		this.importRewriter = importRewriter;
+		this.helper = new DBTestConversionHelper(rewriter, importRewriter);
 	}
 
 	@Override
 	public boolean isConvertable(TypeDeclaration typeDeclaration) {
-		Type superclassType = typeDeclaration.getSuperclassType();
-		if (superclassType != null && superclassType.isSimpleType()) {
-			SimpleType superType = (SimpleType) superclassType;
-			return MODULETESTCASE_CLASSNAME.equals(superType.getName()
-					.getFullyQualifiedName());
-		}
-		return false;
+		return helper.isTestCase(MODULETESTCASE_CLASSNAME, typeDeclaration);
 	}
 
 	@Override
