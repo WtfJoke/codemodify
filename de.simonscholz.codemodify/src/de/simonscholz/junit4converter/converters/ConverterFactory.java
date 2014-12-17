@@ -13,7 +13,7 @@ public class ConverterFactory {
 
 	private ConverterFactory(AST ast, ASTRewrite rewriter,
 			ImportRewrite importRewriter) {
-		converters = new ArrayList<>(4);
+		converters = new ArrayList<>(5);
 		converters.add(new JTestCaseConverter(rewriter, importRewriter));
 		converters
 				.add(new NoDBTestCaseConverter(ast, rewriter, importRewriter));
