@@ -10,7 +10,7 @@ import org.eclipse.jdt.core.dom.rewrite.ImportRewrite;
 class ImportEasyMockIfNecessaryMethodBodyVisitor extends ASTVisitor {
 
 	private static final String EASY_MOCK = "EasyMock";
-	private static final String EASY_MOCK_QUALIFIEDNAME = "CH.obj.Libraries.UnitTesting.BTestCase.EasyMock";
+	private static final String EASY_MOCK_QUALIFIEDNAME = "org.EasyMock";
 	private final ImportRewrite importRewriter;
 
 	public ImportEasyMockIfNecessaryMethodBodyVisitor(
