@@ -20,6 +20,7 @@ public class ConverterFactory {
 		converters.add(new StandardModuleTestCaseConverter(ast, rewriter,
 				importRewriter));
 		converters.add(new CustomTestCaseConverter(rewriter, importRewriter));
+		converters.add(new BTestCaseConverter(rewriter, importRewriter));
 	}
 
 	public static ConverterFactory create(AST ast, ASTRewrite rewriter,
